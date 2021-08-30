@@ -2,14 +2,10 @@ from dataclasses import dataclass
 from bisect import bisect_left
 
 
-@dataclass
+@dataclass(frozen=True)
 class Timeseries:
     time: list
     values: list
-
-    def __post_init__(self):
-        self.original_time = self.time
-        self.original_values = self.values
 
     def lookup(self, t):
 
@@ -28,15 +24,7 @@ class Timeseries:
         selfPlot.show()
 
     def resample(self, t_vector):
-        self.time = t_vector
-        self.values = [self.lookup(x) for x in t_vector]
-
-        return self.values
-
-    def reset(self):
-        self.time = self.original_time
-        self.values = self.original_values
-        return
+        return [self.lookup(x) for x in t_vector]
 
 
 if __name__ == "__main__":
