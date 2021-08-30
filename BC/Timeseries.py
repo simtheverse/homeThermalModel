@@ -46,7 +46,7 @@ if __name__ == "__main__":
     BC['Inlet_PAds_PSIA'] = Timeseries(xs, ys)
 
     stepsize = .01
-    timeend = 10
+    timeend = 15
     i_xs = [i * stepsize for i in range(int(timeend / stepsize))]
     import time
     import matplotlib.pyplot as plt
