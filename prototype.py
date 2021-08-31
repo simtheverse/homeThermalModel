@@ -6,24 +6,24 @@ from BC.case_test import case_test as case
 from plant.model import model as model
 from postprocess.plot import plot as postprocess
 
-[BC, IC] = case()
+[BC, Parameters] = case()
 
 # Number of data points
-n = int(IC['tf']/IC['ts'])
+n = int(Parameters['tf']/Parameters['ts'])
 
 # time points
-t = np.linspace(0,IC['tf'],n)
+t = np.linspace(0,Parameters['tf'],n)
 # resample BCs
 y_BC = resample_dict(BC,t)
 # store solution
-T = np.empty_like(t)
-Tinf = np.empty_like(t)
+Tair_degR = np.empty_like(t)
+Tinf_degR = np.empty_like(t)
 
 # initial conditions
-z0 = [IC['T0'], IC['Tinf0'], IC['Tamb']]
+z0 = [Parameters['IC']['T0_degR'], Parameters['IC']['Tinf0_degR']]
 # record initial conditions
-T[0] = z0[0]
-Tinf[0] = z0[1]
+Tair_degR[0] = z0[0]
+Tinf_degR[0] = z0[1]
 
 
 # solve ODE
@@ -31,12 +31,12 @@ for i in range(1,n):
     # span for next time step
     tspan = [t[i-1],t[i]]
     # solve for next step
-    z = solver(model,z0,tspan,args=(y_BC,i,IC,))
+    z = solver(model,z0,tspan,args=(y_BC,i,Parameters,))
     # store solution for plotting
-    T[i]    = z[1][0]
-    Tinf[i] = z[1][1]
+    Tair_degR[i] = z[1][0]
+    Tinf_degR[i] = z[1][1]
     # next initial condition
     z0 = z[1]
 
 # plot results
-postprocess(t, y_BC, T, Tinf)
+postprocess(t, y_BC, Tair_degR, Tinf_degR)

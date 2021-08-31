@@ -6,14 +6,17 @@ import pytz
 import matplotlib.pyplot as plt
 from meteostat import Stations, Hourly
 import numpy as np
+from dateutil import parser
+from datetime import timedelta
 
 from BC.Timeseries import Timeseries
 
-def getAmbientBC(start_naive, end_naive):
+def getAmbientBC(Parameters):
 
-    # Set coordinates of Vancouver
-    lat = 33.456506143111966
-    lon = -111.68313649552813
+    [lat,lon] = Parameters['geolocation']
+
+    start_naive = parser.parse(Parameters['datetime_str'])
+    end_naive   = start_naive + timedelta(seconds=Parameters['tf'])
 
     timezone = pytz.timezone("America/Phoenix")
     start_tz = timezone.localize(start_naive)
@@ -42,9 +45,8 @@ def getAmbientBC(start_naive, end_naive):
     return [Tamb_degR, Pamb_Pa]
 
 if __name__ == "__main__":
-    # Set time period
-    start_naive = datetime(2021, 8, 30, 8,0,0)
-    end_naive = datetime(2021, 8, 30, 12,0,0)
+    from BC.case_default import case_default
+    [BC, Parameters] = case_default()
 
-    [Tamb_degR, Pamb_Pa] = getAmbientBC(start_naive, end_naive)
+    [Tamb_degR, Pamb_Pa] = getAmbientBC(Parameters)
     print('hi')

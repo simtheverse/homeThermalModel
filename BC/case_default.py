@@ -1,6 +1,6 @@
 from BC.Timeseries import Timeseries
 from BC.getAmbientBC import getAmbientBC
-from datetime import datetime, timedelta
+
 
 def case_default():
     Parameters = dict()
@@ -13,9 +13,9 @@ def case_default():
 
     # Get Ambient conditions
     Parameters['geolocation'] = [33.456506143111966, -111.68313649552813]
-    start_naive = datetime(2021, 8, 30, 8,0,0)
-    end_naive = start_naive + timedelta(seconds=Parameters['tf'])
-    [BC['Tamb_degR'], BC['Pamb_Pa']] = getAmbientBC(start_naive, end_naive)
+    Parameters['datetime_str'] = "Aug 29th 2021 8:00am"
+
+    [BC['Tamb_degR'], BC['Pamb_Pa']] = getAmbientBC(Parameters)
 
 
     IC=dict()
@@ -48,8 +48,8 @@ def case_default():
 
     # Initial Conditions
     IC = dict()
-    IC['T0'] = 0
-    IC['Tinf0'] = 0
+    IC['T0_degR'] = 0
+    IC['Tinf0_degR'] = 0
     Parameters['IC'] = IC
 
     # Other Parameters
