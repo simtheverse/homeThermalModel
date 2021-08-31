@@ -5,12 +5,14 @@ def model(z,t,y_BC,i,Parameters):
     #dxdt = (-x + y_BC['temp'][i])/2.0
     #dydt = (-y + x)/5.0
 
-    Tair = z[0]
-    Tinf = z[1]
-    Tamb = y_BC['Tamb_degR'][i]
+    Tcontents_degR = z[0]
+    Tair_degR = z[1]
+    Tamb_degR = y_BC['Tamb_degR'][i]
 
-    dTairdt = -Parameters['contents']['h']*Parameters['contents']['As']/Parameters['contents']['rho']/Parameters['contents']['V']/Parameters['contents']['c']*(Tair-Tinf)
-    dTinfdt = (-Parameters['air']['h']*Parameters['air']['As']*((Tinf-Tair)+(Tinf-Tamb))+.1)/Parameters['air']['rho']/Parameters['air']['V']/Parameters['air']['c']
+    Tair_rho = y_BC['Pamb_Pa'][i]/Parameters['air']['r_specific_J_per_kgR']/Tair_degR
 
-    dzdt = [dTairdt, dTinfdt]
+    dTcontentsdt = -Parameters['contents']['h']*Parameters['contents']['As']/Tair_rho/Parameters['contents']['V']/Parameters['contents']['c']*(Tcontents_degR-Tair_degR)
+    dTairdt = (-Parameters['air']['h']*Parameters['air']['As']*((Tair_degR-Tcontents_degR)+(Tair_degR-Tamb_degR))+.1)/Tair_rho/Parameters['air']['V']/Parameters['air']['c']
+
+    dzdt = [dTcontentsdt, dTairdt]
     return dzdt
