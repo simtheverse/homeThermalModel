@@ -1,10 +1,5 @@
 # function that returns dz/dt
 def model(z,t,y_BC,i,Parameters):
-    #x = z[0]
-    #y = z[1]
-    #dxdt = (-x + y_BC['temp'][i])/2.0
-    #dydt = (-y + x)/5.0
-
     Tcontents_degR = z[0]
     Tair_degR = z[1]
     Tamb_degR = y_BC['Tamb_degR'][i]
