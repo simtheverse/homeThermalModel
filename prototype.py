@@ -31,7 +31,7 @@ for i in range(1,n):
     # span for next time step
     tspan = [t[i-1],t[i]]
     # solve for next step
-    z, info = solver(model,z0,tspan,args=(y_BC,i,Parameters,), full_output=True, printmessg=True)
+    z = solver(model,z0,tspan,args=(y_BC,i,Parameters,), full_output=False, printmessg=True)
     # store solution for plotting
     Tair_degR[i] = z[1][0]
     Tinf_degR[i] = z[1][1]

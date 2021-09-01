@@ -21,7 +21,7 @@ def model(z,t,y_BC,i,Parameters):
     Tair_rho = y_BC['Pamb_Pa'][i]/Parameters['plant_roomAir']['r_specific_J_per_kgR']/Tair_degR
     Q_convection_amb_room = Qconvection(Parameters['plant_roomAir']['h'], Parameters['plant_roomAir']['As'], Tamb_degR, Tair_degR)
     Q_heatload = Parameters['plant_Person']['heatload_W'] * y_BC['numberOfPeople'][i] + y_BC['appliance_heatload_W'][i]
-    Q_AC = 0
+    Q_AC = y_BC['AC_W'][i]
 
 
     Qnet = (Q_convection_amb_room+Q_heatload+Q_convection_contents_room-Q_AC)

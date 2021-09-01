@@ -12,9 +12,12 @@ def case_test():
     Parameters['ts'] = 1
     [BC['Tamb_degR'], BC['Pamb_Pa']] = getAmbientBC(Parameters)
 
+    BC['AC_W'] = Timeseries([0,60*4, 60*4, 60*4 + 60*20]*int(Parameters['tf']/(60*4+60*20)),[Parameters['plant_AC']['coolingW'], Parameters['plant_AC']['coolingW'], 0, 0]*int(Parameters['tf']/(60*4 +60*20)))
 
-    Parameters['IC']['T0_degR']    = BC['Tamb_degR'].values[0]
-    Parameters['IC']['Tinf0_degR'] = BC['Tamb_degR'].values[0]
+
+
+    Parameters['IC']['T0_degR']    = 72+259.67 #BC['Tamb_degR'].values[0]
+    Parameters['IC']['Tinf0_degR'] = 72+259.67 #BC['Tamb_degR'].values[0]
 
 
     return [BC, Parameters]

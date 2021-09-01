@@ -34,9 +34,9 @@ def case_default():
     Contents = dict()
     Contents['h'] = .2
     Contents['As']= .9*.9  #m^2
-    Contents['rho']=100
+    Contents['rho']= 715 # kg/m^3  http://www.ibpsa.org/proceedings/BS2017/BS2017_012.pdf
     Contents['V'] = 3.35*3.35*0.1524 # m^3 = 11*11*.5ft^2
-    Contents['c'] = 1
+    Contents['c'] = 1400/1.8  # 1400 J/kg/K -> J/kg/R
     Parameters['plant_contents'] = Contents
 
     # Air definition
@@ -47,6 +47,7 @@ def case_default():
 
     # AC parameters
     Parameters['plant_AC'] = AC()
+    BC['AC_W'] = Timeseries([0,60*4, 60*4, 60*4 + 60*20]*int(Parameters['tf']/(60*4 +60*20)),[Parameters['plant_AC']['coolingW'], Parameters['plant_AC']['coolingW'], 0, 0]*int(Parameters['tf']/(60*4 +60*20)))
 
 
 
