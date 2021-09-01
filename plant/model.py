@@ -1,13 +1,32 @@
 # function that returns dz/dt
+
+def Qconvection(h,As, Text, Tint):
+    W = h*As*(Text-Tint)
+
+    return W  # watts entering system
+
 def model(z,t,y_BC,i,Parameters):
     Tcontents_degR = z[0]
     Tair_degR = z[1]
     Tamb_degR = y_BC['Tamb_degR'][i]
 
-    Tair_rho = y_BC['Pamb_Pa'][i]/Parameters['air']['r_specific_J_per_kgR']/Tair_degR
 
-    dTcontentsdt = -Parameters['contents']['h']*Parameters['contents']['As']/Tair_rho/Parameters['contents']['V']/Parameters['contents']['c']*(Tcontents_degR-Tair_degR)
-    dTairdt = (-Parameters['air']['h']*Parameters['air']['As']*((Tair_degR-Tcontents_degR)+(Tair_degR-Tamb_degR))+.1)/Tair_rho/Parameters['air']['V']/Parameters['air']['c']
+
+    # Room contents calc
+    Q_convection_contents_room = Qconvection(Parameters['plant_roomAir']['h'], Parameters['plant_contents']['As'], Tcontents_degR, Tair_degR)
+    dTcontentsdt = (-Q_convection_contents_room )/Parameters['plant_contents']['rho']/Parameters['plant_contents']['V']/Parameters['plant_contents']['c']
+
+
+    ## Room air calc
+    Tair_rho = y_BC['Pamb_Pa'][i]/Parameters['plant_roomAir']['r_specific_J_per_kgR']/Tair_degR
+    Q_convection_amb_room = Qconvection(Parameters['plant_roomAir']['h'], Parameters['plant_roomAir']['As'], Tamb_degR, Tair_degR)
+    Q_heatload = Parameters['plant_Person']['heatload_W'] * y_BC['numberOfPeople'][i] + y_BC['appliance_heatload_W'][i]
+    Q_AC = 0
+
+
+    Qnet = (Q_convection_amb_room+Q_heatload+Q_convection_contents_room-Q_AC)
+
+    dTairdt = Qnet /Tair_rho/Parameters['plant_roomAir']['V']/Parameters['plant_roomAir']['c']
 
     dzdt = [dTcontentsdt, dTairdt]
     return dzdt

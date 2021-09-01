@@ -1,6 +1,9 @@
 from BC.Timeseries import Timeseries
 from BC.getAmbientBC import getAmbientBC
 
+from plant.AC import AC as AC
+from plant.roomAir import roomAir as roomAir
+from plant.people import person as person
 
 def case_default():
     Parameters = dict()
@@ -10,6 +13,9 @@ def case_default():
     # Time Series Boundary Conditions
     BC=dict()
     BC['temp']     = Timeseries([0, 1], [0, 0])
+    BC['numberOfPeople'] = Timeseries([0,1], [1,1])
+    BC['appliance_heatload_W'] = Timeseries([0,1], [50,50])
+
 
     # Get Ambient conditions
     Parameters['geolocation'] = [33.456506143111966, -111.68313649552813]
@@ -27,20 +33,22 @@ def case_default():
     #Contents defintion
     Contents = dict()
     Contents['h'] = .2
-    Contents['As']= 1
+    Contents['As']= .9*.9  #m^2
     Contents['rho']=100
-    Contents['V'] = .9*.9*.9 # m^3 = 3*3*3ft^2
+    Contents['V'] = 3.35*3.35*0.1524 # m^3 = 11*11*.5ft^2
     Contents['c'] = 1
-    Parameters['contents'] = Contents
+    Parameters['plant_contents'] = Contents
 
     # Air definition
-    Air = dict()
-    Air['h'] = 10/1.8  #W/((m^2)*R)
-    Air['As']= 3.35*3.35*6  # m^2
-    Air['r_specific_J_per_kgR'] = 287.058/1.8  # J/kgK to J/kgR
-    Air['V'] = 3.35*3.35*3.35 #m^3 = 11*11*11ft^3
-    Air['c'] = 1
-    Parameters['air'] = Air
+    Parameters['plant_roomAir'] = roomAir()
+
+    # People Definition
+    Parameters['plant_Person'] = person()
+
+    # AC parameters
+    Parameters['plant_AC'] = AC()
+
+
 
 
 
