@@ -7,6 +7,7 @@ def plot(t,y_BC,x,y):
 
     plt.plot(t,x-459.67,'b-',label='Tcontents(t)')
     plt.plot(t,y-459.67,'r--',label='T_air(t)')
+    plt.plot(t,y_BC['AC_W']/y_BC['AC_W']*100, label='AC On')
     plt.ylabel('values')
     plt.xlabel('time')
     plt.legend(loc='best')
