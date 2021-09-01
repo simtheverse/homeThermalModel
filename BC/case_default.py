@@ -2,26 +2,31 @@ from BC.Timeseries import Timeseries
 from BC.getAmbientBC import getAmbientBC
 
 from plant.AC import AC as AC
+from plant.AC import getAC_BC
 from plant.roomAir import roomAir as roomAir
 from plant.people import person as person
 
+from datetime import datetime, timedelta
+
 def case_default():
     Parameters = dict()
-    Parameters['tf'] = 60*60  # 1 hour in seconds
+    hours = 10
+    Parameters['tf'] = 60*60*hours  # 1 hour in seconds
     Parameters['ts'] = .1     # time step = seconds
 
     # Time Series Boundary Conditions
     BC=dict()
     BC['temp']     = Timeseries([0, 1], [0, 0])
     BC['numberOfPeople'] = Timeseries([0,1], [1,1])
-    BC['appliance_heatload_W'] = Timeseries([0,1], [50,50])
+    BC['appliance_heatload_W'] = Timeseries([0,1], [100,100])
 
 
     # Get Ambient conditions
     Parameters['geolocation'] = [33.456506143111966, -111.68313649552813]
-    Parameters['datetime_str'] = "Aug 29th 2021 8:00am"
+    now = datetime.now() - timedelta(hours=24)
+    Parameters['datetime_str'] = now.strftime("%d/%m/%Y %H:%M:%S")
 
-    [BC['Tamb_degR'], BC['Pamb_Pa']] = getAmbientBC(Parameters)
+    [BC['Tamb_degR'], BC['Pamb_Pa'], BC['UVIndex']] = getAmbientBC(Parameters)
 
 
     IC=dict()
@@ -32,10 +37,9 @@ def case_default():
     # Plant properties
     #Contents defintion
     Contents = dict()
-    Contents['h'] = .2
-    Contents['As']= .9*.9  #m^2
+    Contents['As']= 991/10.764  #ft^2 -> m^2
     Contents['rho']= 715 # kg/m^3  http://www.ibpsa.org/proceedings/BS2017/BS2017_012.pdf
-    Contents['V'] = 3.35*3.35*0.1524 # m^3 = 11*11*.5ft^2
+    Contents['V'] = Contents['As']*0.1524 # m^2 *.5ft
     Contents['c'] = 1400/1.8  # 1400 J/kg/K -> J/kg/R
     Parameters['plant_contents'] = Contents
 
@@ -47,12 +51,7 @@ def case_default():
 
     # AC parameters
     Parameters['plant_AC'] = AC()
-    BC['AC_W'] = Timeseries([0,60*4, 60*4, 60*4 + 60*20]*int(Parameters['tf']/(60*4 +60*20)),[Parameters['plant_AC']['coolingW'], Parameters['plant_AC']['coolingW'], 0, 0]*int(Parameters['tf']/(60*4 +60*20)))
-
-
-
-
-
+    BC['AC_W'] = getAC_BC(Parameters['plant_AC']['coolingW'], 60*4, 60*20, Parameters['tf'])
 
 
     # Initial Conditions
