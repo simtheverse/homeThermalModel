@@ -58,10 +58,11 @@ def getAmbientBC(Parameters):
         json_date_tz = timezone.localize(json_date)
         date = json_date_tz.astimezone(pytz.utc).replace(tzinfo=None)
         days.append(date)
-        dataUV.append(int(val['UV_VALUE']))
+        #dataUV.append(float(val['UV_VALUE']))
+        dataUV.append(2)
     df = pd.DataFrame({'datetime': days, 'UVIndex': dataUV})
     df = df.set_index('datetime')
-    df = df[(df.index >= data.index[0]) & (df.index <= data.index[-1])]
+    df = df.between_time(data.index[0].time(), data.index[-1].time(), include_start=True, include_end=True)
     df['time']      = df.index.astype(np.int64)/1e+9
     df['time']      = df['time'] - df['time'][0]
 

@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 
 def case_default():
     Parameters = dict()
-    hours = 5
+    hours = 10
     Parameters['tf'] = 60*60*hours  # 1 hour in seconds
     Parameters['ts'] = .1     # time step = seconds
 
@@ -23,7 +23,7 @@ def case_default():
 
     # Get Ambient conditions
     Parameters['geolocation'] = [33.456506143111966, -111.68313649552813]
-    now = datetime.now() - timedelta(hours=hours+6)
+    now = datetime.now() - timedelta(hours=24)
     Parameters['datetime_str'] = now.strftime("%d/%m/%Y %H:%M:%S")
 
     [BC['Tamb_degR'], BC['Pamb_Pa'], BC['UVIndex']] = getAmbientBC(Parameters)
