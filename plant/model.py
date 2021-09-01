@@ -13,8 +13,9 @@ def model(z,t,y_BC,i,Parameters):
 
 
     # Room contents calc
+    Q_solar_load = 500 * y_BC['UVIndex']/9 #W
     Q_convection_contents_room = Qconvection(Parameters['plant_roomAir']['h'], Parameters['plant_contents']['As'], Tcontents_degR, Tair_degR)
-    dTcontentsdt = (-Q_convection_contents_room )/Parameters['plant_contents']['rho']/Parameters['plant_contents']['V']/Parameters['plant_contents']['c']
+    dTcontentsdt = (-Q_convection_contents_room + Q_solar_load)/Parameters['plant_contents']['rho']/Parameters['plant_contents']['V']/Parameters['plant_contents']['c']
 
 
     ## Room air calc
