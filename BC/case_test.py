@@ -16,8 +16,8 @@ def case_test():
 
 
 
-    Parameters['IC']['T0_degR']    = 72+259.67 #BC['Tamb_degR'].values[0]
-    Parameters['IC']['Tinf0_degR'] = 72+259.67 #BC['Tamb_degR'].values[0]
+    Parameters['IC']['T0_degR']    = 72+459.67 #BC['Tamb_degR'].values[0]
+    Parameters['IC']['Tinf0_degR'] = 72+459.67 #BC['Tamb_degR'].values[0]
 
 
     return [BC, Parameters]
