@@ -6,17 +6,15 @@ from plant.AC import getAC_BC
 def case_test():
     [BC, Parameters] = case_default()
 
-    BC['temp'] = Timeseries([0, 5, 5, 6, 10],[0, 0, 3, 3, 9])
-
     # Constants
     Parameters['ts'] = 1
     [BC['Tamb_degR'], BC['Pamb_Pa'], BC['UVIndex']] = getAmbientBC(Parameters)
 
-    BC['AC_W'] = getAC_BC(Parameters['plant_AC']['coolingW'], 60*4, 60*20, Parameters['tf'])
+    BC['AC_W'] = getAC_BC(Parameters['plant_AC']['coolingW'], 60*5, 60*10, Parameters['tf'])
 
 
-    Parameters['IC']['T0_degR']    = 72+459.67 #BC['Tamb_degR'].values[0]
-    Parameters['IC']['Tinf0_degR'] = 72+459.67 #BC['Tamb_degR'].values[0]
+    Parameters['IC']['Tcontents0_degR']    = 75+459.67 #BC['Tamb_degR'].values[0]
+    Parameters['IC']['Tair0_degR'] = 72+459.67 #BC['Tamb_degR'].values[0]
 
 
     return [BC, Parameters]

@@ -16,14 +16,14 @@ t = np.linspace(0,Parameters['tf'],n)
 # resample BCs
 y_BC = resample_dict(BC,t)
 # store solution
-Tair_degR = np.empty_like(t)
-Tinf_degR = np.empty_like(t)
+Tcontents_degR = np.empty_like(t)
+Tair_degR= np.empty_like(t)
 
 # initial conditions
-z0 = [Parameters['IC']['T0_degR'], Parameters['IC']['Tinf0_degR']]
+z0 = [Parameters['IC']['Tcontents0_degR'], Parameters['IC']['Tair0_degR']]
 # record initial conditions
-Tair_degR[0] = z0[0]
-Tinf_degR[0] = z0[1]
+Tcontents_degR[0] = z0[0]
+Tair_degR[0] = z0[1]
 
 
 # solve ODE
@@ -33,10 +33,10 @@ for i in range(1,n):
     # solve for next step
     z = solver(model,z0,tspan,args=(y_BC,i,Parameters,), full_output=False, printmessg=True)
     # store solution for plotting
-    Tair_degR[i] = z[1][0]
-    Tinf_degR[i] = z[1][1]
+    Tcontents_degR[i] = z[1][0]
+    Tair_degR[i] = z[1][1]
     # next initial condition
     z0 = z[1]
 
 # plot results
-postprocess(t, y_BC, Tair_degR, Tinf_degR)
+postprocess(t, y_BC, Tcontents_degR, Tair_degR)

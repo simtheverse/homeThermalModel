@@ -1,3 +1,5 @@
+from dateutil import parser
+
 from BC.Timeseries import Timeseries
 from BC.getAmbientBC import getAmbientBC
 
@@ -10,7 +12,7 @@ from datetime import datetime, timedelta
 
 def case_default():
     Parameters = dict()
-    hours = 10
+    hours = 9
     Parameters['tf'] = 60*60*hours  # 1 hour in seconds
     Parameters['ts'] = .1     # time step = seconds
 
@@ -24,6 +26,7 @@ def case_default():
     # Get Ambient conditions
     Parameters['geolocation'] = [33.456506143111966, -111.68313649552813]
     now = datetime.now() - timedelta(hours=24)
+    now = parser.parse('9/2/2021 8:00am')
     Parameters['datetime_str'] = now.strftime("%d/%m/%Y %H:%M:%S")
 
     [BC['Tamb_degR'], BC['Pamb_Pa'], BC['UVIndex']] = getAmbientBC(Parameters)
@@ -51,7 +54,7 @@ def case_default():
 
     # AC parameters
     Parameters['plant_AC'] = AC()
-    BC['AC_W'] = getAC_BC(Parameters['plant_AC']['coolingW'], 60*4, 60*20, Parameters['tf'])
+    BC['AC_W'] = getAC_BC(Parameters['plant_AC']['coolingW']*.75, 60*4, 60*20, Parameters['tf'])
 
 
     # Initial Conditions
