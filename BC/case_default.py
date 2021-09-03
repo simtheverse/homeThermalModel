@@ -20,14 +20,14 @@ def case_default():
     BC=dict()
     BC['temp']     = Timeseries([0, 1], [0, 0])
     BC['numberOfPeople'] = Timeseries([0,1], [1,1])
-    BC['appliance_heatload_W'] = Timeseries([0,1], [100,100])
+    BC['appliance_heatload_W'] = Timeseries([0,1], [1000,1000])
 
 
     # Get Ambient conditions
-    Parameters['geolocation'] = [33.456506143111966, -111.68313649552813]
+    Parameters['geolocation'] = [33.4152, -111.8315]
     now = datetime.now() - timedelta(hours=24)
-    now = parser.parse('9/2/2021 8:00am')
-    Parameters['datetime_str'] = now.strftime("%d/%m/%Y %H:%M:%S")
+    now = parser.parse('September 2nd 2021 8:00am')
+    Parameters['datetime_str'] = now.strftime("%m/%d/%Y %H:%M:%S")
 
     [BC['Tamb_degR'], BC['Pamb_Pa'], BC['UVIndex']] = getAmbientBC(Parameters)
 
@@ -41,7 +41,7 @@ def case_default():
     #Contents defintion
     Contents = dict()
     Contents['As']= 991/10.764  #ft^2 -> m^2
-    Contents['rho']= 715 # kg/m^3  http://www.ibpsa.org/proceedings/BS2017/BS2017_012.pdf
+    Contents['rho']= 515 # kg/m^3  http://www.ibpsa.org/proceedings/BS2017/BS2017_012.pdf
     Contents['V'] = Contents['As']*0.1524 # m^2 *.5ft
     Contents['c'] = 1400/1.8  # 1400 J/kg/K -> J/kg/R
     Parameters['plant_contents'] = Contents
@@ -54,17 +54,15 @@ def case_default():
 
     # AC parameters
     Parameters['plant_AC'] = AC()
-    BC['AC_W'] = getAC_BC(Parameters['plant_AC']['coolingW']*.75, 60*4, 60*20, Parameters['tf'])
+    BC['AC_W'] = getAC_BC(Parameters['plant_AC']['coolingW'], 60*4, 60*20, Parameters['tf'])
 
 
     # Initial Conditions
     IC = dict()
-    IC['T0_degR'] = 0
-    IC['Tinf0_degR'] = 0
+    IC['Tcontents0_degR'] = 0
+    IC['Tair0_degR'] = 0
     Parameters['IC'] = IC
 
-    # Other Parameters
-    Parameters['geolocation'] = [33.456506143111966, -111.68313649552813]
 
     return [BC, Parameters]
 
